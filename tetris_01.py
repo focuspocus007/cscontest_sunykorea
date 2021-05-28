@@ -185,12 +185,12 @@ def valid_space(shape, grid):
 
 
 def check_lost(positions):
+    global score
     for pos in positions:
         x, y = pos
         if y < 1:
-            file2 = open(r"scoreboard.txt","w+")
-            file2.write(str(score))
-            file2.close() 
+            with open("scoreboard.txt", 'w') as f:
+                f.write(user_name,str(score))
             return True
     return False
 
@@ -378,6 +378,9 @@ def main():
                     current_piece.y -= 1
                     print(convert_shape_format(current_piece))  # todo fix
 
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+                    main_menu()
         shape_pos = convert_shape_format(current_piece)
 
         # add piece to the grid for drawing
@@ -417,6 +420,7 @@ def main_menu():
     while run:
         win.fill((0, 0, 0))
         draw_text_middle('Press any key to begin.', 60, (255, 255, 255), win)
+
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -427,6 +431,7 @@ def main_menu():
     pygame.quit()
 
 
+user_name = input("Please Enter your name: ")
 win = pygame.display.set_mode((s_width, s_height))
 pygame.display.set_caption('Tetris')
 
