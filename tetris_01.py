@@ -200,7 +200,7 @@ def check_lost(positions):
             # print("user:",user_name)
             # Youngho:1204 (name:score format)
             with open("scoreboard.txt", 'a') as f:
-                f.writelines(str(user_name)+":"+str(score))
+                f.writelines(str(user_name)+":"+str(score)+"\n")
             return True
     return False
 
@@ -426,6 +426,7 @@ def main():
             run = False
             time.sleep(0.5)
             pygame.mixer.stop()
+            getUserScore()
             break
     draw_text_middle("You Lost", 40, (255, 255, 255), win)
 
