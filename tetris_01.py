@@ -290,6 +290,12 @@ def main():
     clock = pygame.time.Clock()
     fall_time = 0
 
+    # Sound
+    pygame.mixer.init()
+    mySound = pygame.mixer.Sound( "music.mp3" )
+    mySound.set_volume(0.7)
+    mySound.play(-1)
+
     while run:
         fall_speed = 0.27
 
