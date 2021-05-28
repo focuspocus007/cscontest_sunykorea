@@ -15,8 +15,8 @@ pygame.font.init()
 # GLOBALS VARS
 s_width = 800
 s_height = 700
-play_width = 300  # meaning 300 // 10 = 30 width per block
-play_height = 600  # meaning 600 // 20 = 20 height per blo ck
+play_width = 200  # meaning 300 // 10 = 30 width per block
+play_height = 440  # meaning 600 // 20 = 20 height per blo ck
 block_size = 20
 
 top_left_x = (s_width - play_width) // 2
@@ -145,7 +145,7 @@ class Piece(object):
 
 
 def create_grid(locked_positions={}):
-    grid = [[(0, 0, 0) for x in range(10)] for x in range(30)]
+    grid = [[(0, 0, 0) for x in range(10)] for x in range(block_size)]
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -261,7 +261,7 @@ def draw_next_shape(shape, surface):
         for j, column in enumerate(row):
             if column == '0':
                 pygame.draw.rect(surface, shape.color,
-                                 (sx + j*30, sy + i*30, 30, 30), 0)
+                                 (sx + j*block_size, sy + i*block_size, block_size, block_size), 0)
 
     surface.blit(label, (sx + 10, sy - 30))
     # surface.blit(score_label, (sx, sy - 150))
@@ -287,7 +287,7 @@ def draw_window(surface):
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             pygame.draw.rect(
-                surface, grid[i][j], (top_left_x + j * 30, top_left_y + i * 30, 30, 30), 0)
+                surface, grid[i][j], (top_left_x + j * block_size, top_left_y + i * block_size, block_size, block_size), 0)
 
     # draw grid and border
     draw_grid(surface, 22, 10)
