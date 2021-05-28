@@ -200,7 +200,7 @@ def check_lost(positions):
             # print("user:",user_name)
             # Youngho:1204 (name:score format)
             with open("scoreboard.txt", 'a') as f:
-                f.write(str(user_name)+":"+str(score))
+                f.writeline(str(user_name)+":"+str(score))
             return True
     return False
 
@@ -494,7 +494,7 @@ def startMenu():
     surface = pygame.display.set_mode((800, 700))
     menu = pygame_menu.Menu(700, 600, 'Team 2 TETRIS',
                             theme=pygame_menu.themes.THEME_DARK)
-    menu.add.text_input('Name :', default='enter your name', onchange=getUserID)
+    menu.add.text_input('Name :', default='', onchange=getUserID)
     menu.add.selector(
         'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
     menu.add.button('Play', main)
