@@ -311,7 +311,7 @@ def main():
     fall_time = 0
     INCREMENT = 5
     start_time = time()
-    fall_speed = 0.27
+    fall_speed = 0.25
     # Sound
     pygame.mixer.init()
     mySound = pygame.mixer.Sound( "music.wav" )
@@ -326,7 +326,7 @@ def main():
             start_time = end_time
             print("start:", start_time, "end:", end_time)
             if (fall_speed != 0):
-                fall_speed = fall_speed - 0.03
+                fall_speed = fall_speed - 0.01
                 print("IF fall_speed:", fall_speed)
             else: 
                 fall_speed = 0
@@ -432,27 +432,31 @@ def main_menu():
                 main()
     pygame.quit()
 
-def speed_difficulty(easy, hard):
-    global fall_time
-    if easy:
-        fall_time = 0.5
-    elif hard:
-        fall_time = 0.2
 
-set_difficulty = speed_difficulty(easy=True, hard=False)
-start_the_game = None
+def set_difficulty(value, difficulty):
+    global fall_time
+    if difficulty == 1:
+        fall_time = 0.3
+    elif difficulty == 2:
+        fall_time = 0.5
+    elif difficulty == 3:
+        fall_time = 0.7
+    pass
+
+
 pygame.init()
-surface = pygame.display.set_mode((600, 400))
-menu = pygame_menu.Menu(300, 400, 'Welcome to Team 2 TETRIS',
-                        theme=pygame_menu.themes.THEME_BLUE)
+win = pygame.display.set_mode((s_width, s_height))
+surface = pygame.display.set_mode((800, 700))
+menu = pygame_menu.Menu(300, 400, 'Team 2 TETRIS',
+                        theme=pygame_menu.themes.THEME_DARK)
 menu.add.text_input('Name :', default='BEST CS Students')
 menu.add.selector(
-    'Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
-menu.add.button('Play', start_the_game)
+    'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
+menu.add.button('Play', main)
 menu.add.button('Quit', pygame_menu.events.EXIT)
 menu.mainloop(surface)
-# user_name = input("Please Enter your name: ")
-# win = pygame.display.set_mode((s_width, s_height))
+
+# 
 # pygame.display.set_caption('Tetris')
 
 # main_menu()  # start game
