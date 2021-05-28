@@ -126,7 +126,20 @@ class Tetris:
         self.figure.rotate()
         if self.intersects():
             self.figure.rotation = old_rotation
+            
+    # def main_menu():
+    # run = True
+    # while run:
+    #     win.fill((0, 0, 0))
+    #     draw_text_middle('Press any key to begin.', 60, (255, 255, 255), win)
+    #     pygame.display.update()
+    #     for event in pygame.event.get():
+    #         if event.type == pygame.QUIT:
+    #             run = False
 
+    #         if event.type == pygame.KEYDOWN:
+    #             main()
+    # pygame.quit()
 
 # Initialize the game engine
 pygame.init()

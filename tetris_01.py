@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 from time import time
 
 """
@@ -128,7 +129,7 @@ shapes = [S, Z, I, O, J, L, T]
 shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255),
                 (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
 # index 0 - 6 represent shape
-
+score = 0
 
 class Piece(object):
     rows = 20  # y
@@ -187,6 +188,9 @@ def check_lost(positions):
     for pos in positions:
         x, y = pos
         if y < 1:
+            file2 = open(r"scoreboard.txt","w+")
+            file2.write(str(score))
+            file2.close() 
             return True
     return False
 
@@ -218,7 +222,7 @@ def draw_grid(surface, row, col):
 
 def clear_rows(grid, locked):
     # need to see if row is clear the shift every other row above down one
-
+    global score
     inc = 0
     for i in range(len(grid)-1, -1, -1):
         row = grid[i]
@@ -232,11 +236,15 @@ def clear_rows(grid, locked):
                 except:
                     continue
     if inc > 0:
+        
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
             x, y = key
             if y < ind:
                 newKey = (x, y + inc)
                 locked[newKey] = locked.pop(key)
+        score += 1
+        print(score)
+
 
 
 def draw_next_shape(shape, surface):
@@ -246,7 +254,7 @@ def draw_next_shape(shape, surface):
     sx = top_left_x + play_width + 50
     sy = top_left_y + play_height/2 - 100
     format = shape.shape[shape.rotation % len(shape.shape)]
-
+    # score_label = font.render('SCORE:' + str(score), 1, (255,255,255))
     for i, line in enumerate(format):
         row = list(line)
         for j, column in enumerate(row):
@@ -255,7 +263,16 @@ def draw_next_shape(shape, surface):
                                  (sx + j*30, sy + i*30, 30, 30), 0)
 
     surface.blit(label, (sx + 10, sy - 30))
+    # surface.blit(score_label, (sx, sy - 150))
 
+
+def draw_score(increaseScore, surface):
+    font = pygame.font.SysFont('comicsans', 30)
+
+    sx = top_left_x + play_width + 50
+    sy = top_left_y + play_height/2 - 100
+    score_label = font.render('SCORE:' + str(increaseScore), 1, (255,255,255))
+    surface.blit(score_label, (sx, sy - 150))
 
 def draw_window(surface):
     surface.fill((0, 0, 0))
@@ -290,7 +307,7 @@ def main():
     next_piece = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
-    increment = 2
+    INCREMENT = 5
     start_time = time()
     fall_speed = 0.27
     # Sound
@@ -302,9 +319,16 @@ def main():
         
         end_time = time()
 
-        if (end_time - start_time >= increment):
+        # Speed Increase as Time passes (5 sec)
+        if (end_time - start_time >= INCREMENT):
             start_time = end_time
-            fall_speed = fall_speed + 10
+            print("start:", start_time, "end:", end_time)
+            if (fall_speed != 0):
+                fall_speed = fall_speed - 0.03
+                print("IF fall_speed:", fall_speed)
+            else: 
+                fall_speed = 0
+                print("ELSE fall_speed:", fall_speed)
 
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
@@ -376,6 +400,7 @@ def main():
 
         draw_window(win)
         draw_next_shape(next_piece, win)
+        draw_score(score, win)
         pygame.display.update()
 
         # Check if user lost
