@@ -197,9 +197,9 @@ def check_lost(positions):
             mySound.set_volume(0.7)
             mySound.play(0)
             
-            print("user:",user_name)
+            # print("user:",user_name)
             # Youngho:1204 (name:score format)
-            with open("scoreboard.txt", 'w') as f:
+            with open("scoreboard.txt", 'a') as f:
                 f.write(str(user_name)+":"+str(score))
             return True
     return False
@@ -253,7 +253,7 @@ def clear_rows(grid, locked):
                 newKey = (x, y + inc)
                 locked[newKey] = locked.pop(key)
         score += 1
-        print(score)
+        # print(score)
 
 
 
@@ -335,13 +335,13 @@ def main():
         # Speed Increase as Time passes (5 sec)
         if (end_time - start_time >= INCREMENT):
             start_time = end_time
-            print("start:", start_time, "end:", end_time)
+            # print("start:", start_time, "end:", end_time)
             if (fall_speed != 0):
                 fall_speed = fall_speed - 0.01
-                print("IF fall_speed:", fall_speed)
+                # print("IF fall_speed:", fall_speed)
             else: 
                 fall_speed = 0
-                print("ELSE fall_speed:", fall_speed)
+                # print("ELSE fall_speed:", fall_speed)
 
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
@@ -389,7 +389,7 @@ def main():
                     while valid_space(current_piece, grid):
                         current_piece.y += 1
                     current_piece.y -= 1
-                    print(convert_shape_format(current_piece))  # todo fix
+                    # print(convert_shape_format(current_piece))  # todo fix
 
                 if event.key == pygame.K_ESCAPE:
                     run = False
@@ -455,7 +455,7 @@ def getUserScore():
     while True:
         line = f.readline()
         if not line: break
-        print(line)
+        # print(line)
         userScore.append(line)
     f.close()
 
@@ -463,28 +463,28 @@ def getUserScore():
     
     finalRank = []
     for each in userScore:
-        print(each)
+        # print(each)
         rankScore = ""
         userName = ""
         for x in reversed(each):
             if x.isdigit():
-                print(type(rankScore), type(x))
+                # print(type(rankScore), type(x))
                 rankScore += str(x)
             else:
                 userName += str(x)
             #reverse the integers that were reversed because of the reversed for loop
         rankScore = str(rankScore[::-1])
-        print("rankscore",rankScore)
+        # print("rankscore",rankScore)
 
         userName = userName[::-1]
-        print("username",userName)
+        # print("username",userName)
 
         finalRank.append((int(rankScore), userName.rstrip(":\n")))
         
         finalRank.sort(reverse=True, key=lambda tup: tup[0])
 
         
-        print(finalRank)
+        # print(finalRank)
     return finalRank
 
 def startMenu():
@@ -504,19 +504,19 @@ def startMenu():
 
     if len(ranking) >= 3:
         SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n3rd : {ranking[2][0], ranking[2][1]}\n"
-        print("SCORE_GUIDE",SCORE_GUIDE)
+        # print("SCORE_GUIDE",SCORE_GUIDE)
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 2:
         SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n"
-        print("SCORE_GUIDE",SCORE_GUIDE)
+        # print("SCORE_GUIDE",SCORE_GUIDE)
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 1:
         SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n"
-        print("SCORE_GUIDE",SCORE_GUIDE)
+        # print("SCORE_GUIDE",SCORE_GUIDE)
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 0:
         SCORE_GUIDE = "\nYOU ARE THE FIRST PLAYER! \n PLAY AND BECOME THE FIRST RANKER!"
-        print("SCORE_GUIDE",SCORE_GUIDE)
+        # print("SCORE_GUIDE",SCORE_GUIDE)
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
 
     menu.mainloop(surface)
