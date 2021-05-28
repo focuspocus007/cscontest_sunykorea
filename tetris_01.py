@@ -214,11 +214,11 @@ def draw_grid(surface, row, col):
     sx = top_left_x
     sy = top_left_y
     for i in range(row):
-        pygame.draw.line(surface, (128, 128, 128), (sx, sy + i*30),
-                         (sx + play_width, sy + i * 30))  # horizontal lines
+        pygame.draw.line(surface, (128, 128, 128), (sx, sy + i*block_size),
+                         (sx + play_width, sy + i * block_size))  # horizontal lines
         for j in range(col):
-            pygame.draw.line(surface, (128, 128, 128), (sx + j * 30, sy),
-                             (sx + j * 30, sy + play_height))  # vertical lines
+            pygame.draw.line(surface, (128, 128, 128), (sx + j * block_size, sy),
+                             (sx + j * block_size, sy + play_height))  # vertical lines
 
 
 def clear_rows(grid, locked):
@@ -290,7 +290,7 @@ def draw_window(surface):
                 surface, grid[i][j], (top_left_x + j * 30, top_left_y + i * 30, 30, 30), 0)
 
     # draw grid and border
-    draw_grid(surface, 20, 10)
+    draw_grid(surface, 22, 10)
     pygame.draw.rect(surface, (255, 0, 0), (top_left_x,
                                             top_left_y, play_width, play_height), 5)
     # pygame.display.update()
