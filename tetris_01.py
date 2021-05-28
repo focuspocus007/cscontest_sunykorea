@@ -1,5 +1,6 @@
 import pygame
 import random
+from time import time
 
 """
 10 x 20 square grid
@@ -289,9 +290,17 @@ def main():
     next_piece = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
-
+    
+    increment = 2
+    start_time = time()
+    fall_speed = 0.27
     while run:
-        fall_speed = 0.27
+        
+        end_time = time()
+
+        if (end_time - start_time >= 1000):
+            start_time = end_time
+            fall_speed = fall_speed + 10
 
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
