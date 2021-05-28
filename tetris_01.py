@@ -24,6 +24,9 @@ top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
 
 fall_time = 0
+
+inGame = True
+
 # SHAPE FORMATS
 
 S = [['.....',
@@ -191,10 +194,14 @@ def check_lost(positions):
     for pos in positions:
         x, y = pos
         if y < 1:
+            pygame.mixer.init()
+            mySound = pygame.mixer.Sound( "Game over sound effect HD.mp3" )
+            mySound.set_volume(0.7)
+            mySound.play(0)
             print("user:",user_name)
-            with open("scoreboard.txt", 'w') as f:
+            # with open("scoreboard.txt", 'w') as f:
                 
-                f.write(str(user_name)+":"+str(score))
+                # f.write(str(user_name)+":"+str(score))
             return True
     return False
 
@@ -303,6 +310,8 @@ def draw_window(surface):
 def main():
     global grid
     global fall_time
+    global inGame
+    inGame = True
 
     locked_positions = {}  # (x,y):(255,0,0)
     grid = create_grid(locked_positions)
@@ -316,11 +325,15 @@ def main():
     INCREMENT = 5
     start_time = time()
     fall_speed = 0.25
-    # Sound
-    pygame.mixer.init()
-    mySound = pygame.mixer.Sound( "music.wav" )
-    mySound.set_volume(0.7)
-    mySound.play(-1)
+
+    # Sound iff inGame
+    if inGame:
+        pygame.mixer.init()
+        mySound = pygame.mixer.Sound( "music.wav" )
+        mySound.set_volume(0.7)
+        mySound.play(-1)
+    if inGame == False:
+        mySound.stop()
     while run:
         
         end_time = time()
@@ -386,7 +399,9 @@ def main():
 
                 if event.key == pygame.K_ESCAPE:
                     run = False
-                    main_menu()
+                    inGame = False
+                    startMenu()
+
         shape_pos = convert_shape_format(current_piece)
 
         # add piece to the grid for drawing
@@ -415,8 +430,9 @@ def main():
         # Check if user lost
         if check_lost(locked_positions):
             run = False
-
+            break
     draw_text_middle("You Lost", 40, (255, 255, 255), win)
+
     pygame.display.update()
     pygame.time.delay(2000)
 
@@ -494,44 +510,42 @@ def getUserScore():
         print(finalRank)
     return finalRank
 
-pygame.init()
+def startMenu():
+    global inGame
+    inGame = False
+    pygame.init()
+    
+    surface = pygame.display.set_mode((800, 700))
+    menu = pygame_menu.Menu(700, 600, 'Team 2 TETRIS',
+                            theme=pygame_menu.themes.THEME_DARK)
+    menu.add.text_input('Name :', default='enter your name', onchange=getUserID)
+    menu.add.selector(
+        'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
+    menu.add.button('Play', main)
+    menu.add.button('Quit', pygame_menu.events.EXIT)
+
+    ranking = getUserScore()
+
+    if len(ranking) >= 3:
+        SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n3rd : {ranking[2][0], ranking[2][1]}\n"
+        print("SCORE_GUIDE",SCORE_GUIDE)
+        menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
+    if len(ranking) == 2:
+        SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n"
+        print("SCORE_GUIDE",SCORE_GUIDE)
+        menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
+    if len(ranking) == 1:
+        SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n"
+        print("SCORE_GUIDE",SCORE_GUIDE)
+        menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
+    if len(ranking) == 0:
+        SCORE_GUIDE = "\nYOU ARE THE FIRST PLAYER! \n PLAY AND BECOME THE FIRST RANKER!"
+        print("SCORE_GUIDE",SCORE_GUIDE)
+        menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
+
+    menu.mainloop(surface)
 win = pygame.display.set_mode((s_width, s_height))
-surface = pygame.display.set_mode((800, 700))
-menu = pygame_menu.Menu(700, 600, 'Team 2 TETRIS',
-                        theme=pygame_menu.themes.THEME_DARK)
-menu.add.text_input('Name :', default='enter your name', onchange=getUserID)
-menu.add.selector(
-    'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
-menu.add.button('Play', main)
-menu.add.button('Quit', pygame_menu.events.EXIT)
-
-
-ranking = getUserScore()
-# HELP = "\n GOD OF TETRIS [RANKING]\n\n",ranking[0],\
-#         "\n"\
-#         "Press ENTER to access a Sub-Menu or use an option \n"\
-#         "Press UP/DOWN to move through Menu \n"\
-#         "Press LEFT/RIGHT to move through Selectors.\n"
-
-if len(ranking) >= 3:
-    SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n3rd : {ranking[2][0], ranking[2][1]}\n"
-    print("SCORE_GUIDE",SCORE_GUIDE)
-    menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
-if len(ranking) == 2:
-    SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n"
-    print("SCORE_GUIDE",SCORE_GUIDE)
-    menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
-if len(ranking) == 1:
-    SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n"
-    print("SCORE_GUIDE",SCORE_GUIDE)
-    menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
-if len(ranking) == 0:
-    SCORE_GUIDE = "\nYOU ARE THE FIRST PLAYER! \n PLAY AND BECOME THE FIRST RANKER!"
-    print("SCORE_GUIDE",SCORE_GUIDE)
-    menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
-
-menu.mainloop(surface)
-
+startMenu()
 # 
 # pygame.display.set_caption('Tetris')
 
