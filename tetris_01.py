@@ -128,8 +128,7 @@ T = [['.....',
       '.....']]
 
 shapes = [S, Z, I, O, J, L, T]
-shape_colors = [(123, 235, 165), (125, 150, 178), (134, 115, 155),
-                (199, 132, 145), (135, 115, 146), (146, 167, 189), (118, 119, 178)]
+shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (128, 0, 128), (255, 127, 0), (255, 0, 127)]
 # index 0 - 6 represent shape
 score = 0
 
@@ -264,8 +263,9 @@ def draw_next_shape(shape, surface):
         row = list(line)
         for j, column in enumerate(row):
             if column == '0':
-                pygame.draw.rect(surface, shape.color,
-                                 (sx + j*block_size, sy + i*block_size, block_size, block_size), 0)
+                pygame.Surface.fill(surface, shape.color, (sx + j*block_size, sy + i*block_size, block_size, block_size))
+                pygame.draw.rect(surface, (0, 0, 0),
+                                 (sx + j*block_size, sy + i*block_size, block_size, block_size), 5)
 
     surface.blit(label, (sx + 10, sy - 30))
     # surface.blit(score_label, (sx, sy - 150))
@@ -290,13 +290,13 @@ def draw_window(surface):
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
-            pygame.draw.rect(
-                surface, grid[i][j], (top_left_x + j * block_size, top_left_y + i * block_size, block_size, block_size), 0)
+            pygame.Surface.fill(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size))
+            pygame.draw.rect(surface, (0, 0, 0), (top_left_x + j * block_size, top_left_y + i * block_size, block_size, block_size), 5)
 
     # draw grid and border
     draw_grid(surface, 22, 10)
-    pygame.draw.rect(surface, (255, 0, 0), (top_left_x,
-                                            top_left_y, play_width, play_height), 5)
+    pygame.draw.rect(surface, (255, 255, 255), (top_left_x,
+                                            top_left_y, play_width, play_height), 1) 
     # pygame.display.update()
 
 
