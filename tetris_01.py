@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 from time import time
+import re
 import pygame_menu
 
 """
@@ -453,17 +454,67 @@ def getUserID(value):
     global user_name 
     user_name = value
 
+
+def getUserScore():
+    userScore = []
+    
+    f = open("scoreBoard.txt", 'r')
+    while True:
+        line = f.readline()
+        if not line: break
+        print(line)
+        userScore.append(line)
+    f.close()
+
+    #SORT RESULT
+    
+    finalRank = []
+    for each in userScore:
+        print(each)
+        rankScore = ""
+        userName = ""
+        for x in reversed(each):
+            if x.isdigit():
+                print(type(rankScore), type(x))
+                rankScore += str(x)
+            else:
+                userName += str(x)
+            #reverse the integers that were reversed because of the reversed for loop
+        rankScore = str(rankScore[::-1])
+        print("rankscore",rankScore)
+
+        userName = userName[::-1]
+        print("username",userName)
+
+        finalRank.append((int(rankScore), userName.rstrip(":\n")))
+        
+        finalRank.sort(reverse=True, key=lambda tup: tup[0])
+
+        
+        print(finalRank)
+    return finalRank
+
 pygame.init()
 win = pygame.display.set_mode((s_width, s_height))
 surface = pygame.display.set_mode((800, 700))
-menu = pygame_menu.Menu(300, 400, 'Team 2 TETRIS',
+menu = pygame_menu.Menu(700, 600, 'Team 2 TETRIS',
                         theme=pygame_menu.themes.THEME_DARK)
-menu.add.text_input('Name :', default='BEST CS Students', onchange=getUserID)
+menu.add.text_input('Name :', default='enter your name', onchange=getUserID)
 menu.add.selector(
     'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
-menu.add.button('Score Board', scoreBoard)
 menu.add.button('Play', main)
 menu.add.button('Quit', pygame_menu.events.EXIT)
+
+
+ranking = getUserScore()
+# HELP = "\n GOD OF TETRIS [RANKING]\n\n",ranking[0],\
+#         "\n"\
+#         "Press ENTER to access a Sub-Menu or use an option \n"\
+#         "Press UP/DOWN to move through Menu \n"\
+#         "Press LEFT/RIGHT to move through Selectors.\n"
+HELP = f"\nGOD OF TETRIS [RANKING]\n SCORE:NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n3rd : {ranking[2][0], ranking[2][1]}\n4th : {ranking[3][0], ranking[3][1]}\n5th : {ranking[4][0], ranking[4][1]}"
+print("HELP",HELP)
+menu.add_label(HELP, max_char=-1, font_size=20)
 menu.mainloop(surface)
 
 # 

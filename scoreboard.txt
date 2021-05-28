@@ -1,1 +1,5 @@
-<pygame_menu.widgets.widget.textinput.TextInput object at 0x7f4c2beb9100>:0
+Youngho:1204
+Babooin:50
+Media:12
+Daekyung:500
+Choo:1000
