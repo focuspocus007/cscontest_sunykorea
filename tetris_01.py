@@ -200,7 +200,7 @@ def check_lost(positions):
             # print("user:",user_name)
             # Youngho:1204 (name:score format)
             with open("scoreboard.txt", 'a') as f:
-                f.writeline(str(user_name)+":"+str(score))
+                f.writelines(str(user_name)+":"+str(score))
             return True
     return False
 
