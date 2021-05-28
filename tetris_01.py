@@ -302,7 +302,7 @@ def main():
         
         end_time = time()
 
-        if (end_time - start_time >= 1000):
+        if (end_time - start_time >= increment):
             start_time = end_time
             fall_speed = fall_speed + 10
 
