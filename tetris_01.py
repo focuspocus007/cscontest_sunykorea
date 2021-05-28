@@ -426,7 +426,7 @@ def main():
             run = False
             time.sleep(0.5)
             pygame.mixer.stop()
-            getUserScore()
+            startMenu()
             break
     draw_text_middle("You Lost", 40, (255, 255, 255), win)
 
