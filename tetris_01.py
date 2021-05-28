@@ -437,11 +437,11 @@ def main():
 def set_difficulty(value, difficulty):
     global fall_time
     if difficulty == 1:
-        fall_time = 0.3
+        fall_time = 0.1
     elif difficulty == 2:
-        fall_time = 0.5
+        fall_time = 0.35
     elif difficulty == 3:
-        fall_time = 0.7
+        fall_time = 0.5
 
 
 def getUserID(value):
