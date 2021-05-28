@@ -11,7 +11,7 @@ represented in order by 0 - 6
 """
 
 pygame.font.init()
-
+user_name = ""
 # GLOBALS VARS
 s_width = 800
 s_height = 700
@@ -191,7 +191,9 @@ def check_lost(positions):
     for pos in positions:
         x, y = pos
         if y < 1:
+            print("user:",user_name)
             with open("scoreboard.txt", 'w') as f:
+                
                 f.write(str(user_name)+":"+str(score))
             return True
     return False
@@ -428,7 +430,6 @@ def set_difficulty(value, difficulty):
         fall_time = 0.7
 
 def scoreBoard():
-    
     run = True
     while run:
         win.fill((0, 0, 0))
@@ -448,12 +449,16 @@ def scoreBoard():
                 run = False
     pygame.quit()
 
+def getUserID(value):
+    global user_name 
+    user_name = value
+
 pygame.init()
 win = pygame.display.set_mode((s_width, s_height))
 surface = pygame.display.set_mode((800, 700))
 menu = pygame_menu.Menu(300, 400, 'Team 2 TETRIS',
                         theme=pygame_menu.themes.THEME_DARK)
-user_name = menu.add.text_input('Name :', default='BEST CS Students')
+menu.add.text_input('Name :', default='BEST CS Students', onchange=getUserID)
 menu.add.selector(
     'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
 menu.add.button('Score Board', scoreBoard)
