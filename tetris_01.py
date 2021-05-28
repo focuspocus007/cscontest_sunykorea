@@ -290,10 +290,14 @@ def main():
     next_piece = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
-    
     increment = 2
     start_time = time()
     fall_speed = 0.27
+    # Sound
+    pygame.mixer.init()
+    mySound = pygame.mixer.Sound( "music.mp3" )
+    mySound.set_volume(0.7)
+    mySound.play(-1)
     while run:
         
         end_time = time()
