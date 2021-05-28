@@ -512,9 +512,24 @@ ranking = getUserScore()
 #         "Press ENTER to access a Sub-Menu or use an option \n"\
 #         "Press UP/DOWN to move through Menu \n"\
 #         "Press LEFT/RIGHT to move through Selectors.\n"
-HELP = f"\nGOD OF TETRIS [RANKING]\n SCORE:NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n3rd : {ranking[2][0], ranking[2][1]}\n4th : {ranking[3][0], ranking[3][1]}\n5th : {ranking[4][0], ranking[4][1]}"
-print("HELP",HELP)
-menu.add_label(HELP, max_char=-1, font_size=20)
+
+if len(ranking) >= 3:
+    SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n3rd : {ranking[2][0], ranking[2][1]}\n"
+    print("SCORE_GUIDE",SCORE_GUIDE)
+    menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
+if len(ranking) == 2:
+    SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n"
+    print("SCORE_GUIDE",SCORE_GUIDE)
+    menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
+if len(ranking) == 1:
+    SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n"
+    print("SCORE_GUIDE",SCORE_GUIDE)
+    menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
+if len(ranking) == 0:
+    SCORE_GUIDE = "\nYOU ARE THE FIRST PLAYER! \n PLAY AND BECOME THE FIRST RANKER!"
+    print("SCORE_GUIDE",SCORE_GUIDE)
+    menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
+
 menu.mainloop(surface)
 
 # 
