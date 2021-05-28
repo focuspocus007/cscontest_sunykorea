@@ -193,7 +193,7 @@ def check_lost(positions):
         x, y = pos
         if y < 1:
             pygame.mixer.init()
-            mySound = pygame.mixer.Sound( "Game over sound effect HD.mp3" )
+            mySound = pygame.mixer.Sound( "Game over sound effect HD.wav" )
             mySound.set_volume(0.7)
             mySound.play(0)
             
@@ -451,7 +451,7 @@ def getUserID(value):
 def getUserScore():
     userScore = []
     
-    f = open("scoreBoard.txt", 'r')
+    f = open("scoreboard.txt", 'r')
     while True:
         line = f.readline()
         if not line: break
