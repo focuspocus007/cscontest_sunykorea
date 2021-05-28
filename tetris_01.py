@@ -17,7 +17,7 @@ s_width = 800
 s_height = 700
 play_width = 300  # meaning 300 // 10 = 30 width per block
 play_height = 600  # meaning 600 // 20 = 20 height per blo ck
-block_size = 30
+block_size = 20
 
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
@@ -133,7 +133,7 @@ shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255),
 score = 0
 
 class Piece(object):
-    rows = 20  # y
+    rows = 22  # y
     columns = 10  # x
 
     def __init__(self, column, row, shape):
@@ -145,7 +145,7 @@ class Piece(object):
 
 
 def create_grid(locked_positions={}):
-    grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
+    grid = [[(0, 0, 0) for x in range(10)] for x in range(30)]
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -417,22 +417,6 @@ def main():
     pygame.time.delay(2000)
 
 
-def main_menu():
-    run = True
-    while run:
-        win.fill((0, 0, 0))
-        draw_text_middle('Press any key to begin.', 60, (255, 255, 255), win)
-
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-
-            if event.type == pygame.KEYDOWN:
-                main()
-    pygame.quit()
-
-
 def set_difficulty(value, difficulty):
     global fall_time
     if difficulty == 1:
@@ -442,6 +426,26 @@ def set_difficulty(value, difficulty):
     elif difficulty == 3:
         fall_time = 0.7
 
+def scoreBoard():
+    
+    run = True
+    while run:
+        win.fill((0, 0, 0))
+        # font = pygame.font.SysFont('comicsans', 60, bold=True)
+        # label = font.render('PRESS ESC TO GO BACK', 1, (255, 255, 255))
+        # surface.blit(label, (120),(100))
+
+        # s_width = 800
+        # s_height = 700
+                         
+        draw_text_middle('PRESS ESC TO GO BACK', 20, (255, 255, 255), win)
+        # draw_text_middle('KING OF TETRIS', 50, (255, 255, 255), win)
+        
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+    pygame.quit()
 
 pygame.init()
 win = pygame.display.set_mode((s_width, s_height))
@@ -451,6 +455,7 @@ menu = pygame_menu.Menu(300, 400, 'Team 2 TETRIS',
 user_name = menu.add.text_input('Name :', default='BEST CS Students')
 menu.add.selector(
     'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
+menu.add.button('Score Board', scoreBoard)
 menu.add.button('Play', main)
 menu.add.button('Quit', pygame_menu.events.EXIT)
 menu.mainloop(surface)
