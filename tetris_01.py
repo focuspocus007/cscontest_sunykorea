@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 from time import time
+import pygame_menu
 
 """
 10 x 20 square grid
@@ -21,7 +22,7 @@ block_size = 30
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
 
-
+fall_time = 0
 # SHAPE FORMATS
 
 S = [['.....',
@@ -297,6 +298,7 @@ def draw_window(surface):
 
 def main():
     global grid
+    global fall_time
 
     locked_positions = {}  # (x,y):(255,0,0)
     grid = create_grid(locked_positions)
@@ -430,9 +432,27 @@ def main_menu():
                 main()
     pygame.quit()
 
+def speed_difficulty(easy, hard):
+    global fall_time
+    if easy:
+        fall_time = 0.5
+    elif hard:
+        fall_time = 0.2
 
-user_name = input("Please Enter your name: ")
-win = pygame.display.set_mode((s_width, s_height))
-pygame.display.set_caption('Tetris')
+set_difficulty = speed_difficulty(easy=True, hard=False)
+start_the_game = None
+pygame.init()
+surface = pygame.display.set_mode((600, 400))
+menu = pygame_menu.Menu(300, 400, 'Welcome to Team 2 TETRIS',
+                        theme=pygame_menu.themes.THEME_BLUE)
+menu.add.text_input('Name :', default='BEST CS Students')
+menu.add.selector(
+    'Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
+menu.add.button('Play', start_the_game)
+menu.add.button('Quit', pygame_menu.events.EXIT)
+menu.mainloop(surface)
+# user_name = input("Please Enter your name: ")
+# win = pygame.display.set_mode((s_width, s_height))
+# pygame.display.set_caption('Tetris')
 
-main_menu()  # start game
+# main_menu()  # start game
