@@ -191,7 +191,7 @@ def check_lost(positions):
         x, y = pos
         if y < 1:
             with open("scoreboard.txt", 'w') as f:
-                f.write(user_name,str(score))
+                f.write(str(user_name)+":"+str(score))
             return True
     return False
 
@@ -441,7 +441,6 @@ def set_difficulty(value, difficulty):
         fall_time = 0.5
     elif difficulty == 3:
         fall_time = 0.7
-    pass
 
 
 pygame.init()
@@ -449,7 +448,7 @@ win = pygame.display.set_mode((s_width, s_height))
 surface = pygame.display.set_mode((800, 700))
 menu = pygame_menu.Menu(300, 400, 'Team 2 TETRIS',
                         theme=pygame_menu.themes.THEME_DARK)
-menu.add.text_input('Name :', default='BEST CS Students')
+user_name = menu.add.text_input('Name :', default='BEST CS Students')
 menu.add.selector(
     'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
 menu.add.button('Play', main)
