@@ -1,7 +1,7 @@
 import pygame
 import random
 import os
-from time import time
+import time
 import re
 import pygame_menu
 
@@ -24,8 +24,6 @@ top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
 
 fall_time = 0
-
-inGame = True
 
 # SHAPE FORMATS
 
@@ -198,10 +196,11 @@ def check_lost(positions):
             mySound = pygame.mixer.Sound( "Game over sound effect HD.mp3" )
             mySound.set_volume(0.7)
             mySound.play(0)
+            
             print("user:",user_name)
-            # with open("scoreboard.txt", 'w') as f:
-                
-                # f.write(str(user_name)+":"+str(score))
+            # Youngho:1204 (name:score format)
+            with open("scoreboard.txt", 'w') as f:
+                f.write(str(user_name)+":"+str(score))
             return True
     return False
 
@@ -310,8 +309,6 @@ def draw_window(surface):
 def main():
     global grid
     global fall_time
-    global inGame
-    inGame = True
 
     locked_positions = {}  # (x,y):(255,0,0)
     grid = create_grid(locked_positions)
@@ -323,20 +320,17 @@ def main():
     clock = pygame.time.Clock()
     fall_time = 0
     INCREMENT = 5
-    start_time = time()
+    start_time = time.time()
     fall_speed = 0.25
 
     # Sound iff inGame
-    if inGame:
-        pygame.mixer.init()
-        mySound = pygame.mixer.Sound( "music.wav" )
-        mySound.set_volume(0.7)
-        mySound.play(-1)
-    if inGame == False:
-        mySound.stop()
+    pygame.mixer.init()
+    mySound = pygame.mixer.Sound( "music.wav" )
+    mySound.set_volume(0.7)
+    mySound.play(-1)
     while run:
         
-        end_time = time()
+        end_time = time.time()
 
         # Speed Increase as Time passes (5 sec)
         if (end_time - start_time >= INCREMENT):
@@ -399,7 +393,7 @@ def main():
 
                 if event.key == pygame.K_ESCAPE:
                     run = False
-                    inGame = False
+                    pygame.mixer.stop()
                     startMenu()
 
         shape_pos = convert_shape_format(current_piece)
@@ -430,6 +424,8 @@ def main():
         # Check if user lost
         if check_lost(locked_positions):
             run = False
+            time.sleep(0.5)
+            pygame.mixer.stop()
             break
     draw_text_middle("You Lost", 40, (255, 255, 255), win)
 
@@ -446,25 +442,6 @@ def set_difficulty(value, difficulty):
     elif difficulty == 3:
         fall_time = 0.7
 
-def scoreBoard():
-    run = True
-    while run:
-        win.fill((0, 0, 0))
-        # font = pygame.font.SysFont('comicsans', 60, bold=True)
-        # label = font.render('PRESS ESC TO GO BACK', 1, (255, 255, 255))
-        # surface.blit(label, (120),(100))
-
-        # s_width = 800
-        # s_height = 700
-                         
-        draw_text_middle('PRESS ESC TO GO BACK', 20, (255, 255, 255), win)
-        # draw_text_middle('KING OF TETRIS', 50, (255, 255, 255), win)
-        
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-    pygame.quit()
 
 def getUserID(value):
     global user_name 
@@ -511,8 +488,7 @@ def getUserScore():
     return finalRank
 
 def startMenu():
-    global inGame
-    inGame = False
+
     pygame.init()
     
     surface = pygame.display.set_mode((800, 700))
