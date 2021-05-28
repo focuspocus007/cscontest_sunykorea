@@ -312,7 +312,7 @@ def main():
     fall_speed = 0.27
     # Sound
     pygame.mixer.init()
-    mySound = pygame.mixer.Sound( "music.mp3" )
+    mySound = pygame.mixer.Sound( "music.wav" )
     mySound.set_volume(0.7)
     mySound.play(-1)
     while run:
