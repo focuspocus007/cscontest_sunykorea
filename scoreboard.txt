@@ -1,1 +1,1 @@
-<pygame_menu.widgets.widget.textinput.TextInput object at 0x7f4c2beb9100>:0
+:0
