@@ -331,13 +331,10 @@ def main():
         # Speed Increase as Time passes (5 sec)
         if (end_time - start_time >= INCREMENT):
             start_time = end_time
-            # print("start:", start_time, "end:", end_time)
             if (fall_speed != 0):
                 fall_speed = fall_speed - 0.01
-                # print("IF fall_speed:", fall_speed)
             else: 
                 fall_speed = 0
-                # print("ELSE fall_speed:", fall_speed)
 
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
