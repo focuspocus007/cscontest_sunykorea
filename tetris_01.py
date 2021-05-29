@@ -265,8 +265,7 @@ def draw_next_shape(shape, surface):
         for j, column in enumerate(row):
             if column == '0':
                 pygame.Surface.fill(surface, shape.color, (sx + j*block_size, sy + i*block_size, block_size, block_size))
-                pygame.draw.rect(surface, (0, 0, 0),
-                                 (sx + j*block_size, sy + i*block_size, block_size, block_size), 5)
+                pygame.draw.rect(surface, (0, 0, 0), (sx + j*block_size, sy + i*block_size, block_size, block_size), 5)
 
     surface.blit(label, (sx + 10, sy - 30))
     # surface.blit(score_label, (sx, sy - 150))
@@ -286,8 +285,7 @@ def draw_window(surface):
     font = pygame.font.SysFont('comicsans', 60)
     label = font.render('TETRIS', 1, (255, 255, 255))
 
-    surface.blit(label, (top_left_x + play_width /
-                         2 - (label.get_width() / 2), 30))
+    surface.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 30))
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -295,11 +293,52 @@ def draw_window(surface):
             pygame.draw.rect(surface, (0, 0, 0), (top_left_x + j * block_size, top_left_y + i * block_size, block_size, block_size), 5)
 
     # draw grid and border
-    draw_grid(surface, 22, 10)
-    pygame.draw.rect(surface, (255, 255, 255), (top_left_x,
-                                            top_left_y, play_width, play_height), 1) 
+    draw_grid(surface, rows, columns)
+    pygame.draw.rect(surface, (255, 255, 255), (top_left_x, top_left_y, play_width, play_height), 1) 
     # pygame.display.update()
 
+def set_difficulty(value, difficulty):
+    global fall_time
+    if difficulty == 1:
+        fall_time = 0.1
+    elif difficulty == 2:
+        fall_time = 0.35
+    elif difficulty == 3:
+        fall_time = 0.5
+
+
+def getUserID(value):
+    global user_name 
+    user_name = value
+
+
+def getUserScore():
+    userScore = []
+    f = open("scoreboard.txt", 'r')
+    while True:
+        line = f.readline()
+        if not line: break
+        userScore.append(line)
+    f.close()
+
+    #SORT RESULT
+
+    finalRank = []
+
+    for each in userScore:
+        rankScore = ""
+        userName = ""
+        for x in reversed(each):
+            if x.isdigit():
+                rankScore += str(x)
+            else:
+                userName += str(x)
+            #reverse the integers that were reversed because of the reversed for loop
+        rankScore = str(rankScore[::-1])
+        userName = userName[::-1]
+        finalRank.append((int(rankScore), userName.rstrip(":\n")))
+        finalRank.sort(reverse=True, key=lambda tup: tup[0])
+    return finalRank
 
 def main():
     global grid
@@ -427,54 +466,6 @@ def main():
     pygame.display.update()
     pygame.time.delay(2000)
 
-
-def set_difficulty(value, difficulty):
-    global fall_time
-    if difficulty == 1:
-        fall_time = 0.1
-    elif difficulty == 2:
-        fall_time = 0.35
-    elif difficulty == 3:
-        fall_time = 0.5
-
-
-def getUserID(value):
-    global user_name 
-    user_name = value
-
-
-def getUserScore():
-    userScore = []
-    
-    f = open("scoreboard.txt", 'r')
-    while True:
-        line = f.readline()
-        if not line: break
-        userScore.append(line)
-    f.close()
-
-    #SORT RESULT
-    
-    finalRank = []
-    for each in userScore:
-        rankScore = ""
-        userName = ""
-        for x in reversed(each):
-            if x.isdigit():
-                rankScore += str(x)
-            else:
-                userName += str(x)
-            #reverse the integers that were reversed because of the reversed for loop
-        rankScore = str(rankScore[::-1])
-
-        userName = userName[::-1]
-
-        finalRank.append((int(rankScore), userName.rstrip(":\n")))
-        
-        finalRank.sort(reverse=True, key=lambda tup: tup[0])
-
-    return finalRank
-
 def startMenu():
     pygame.init()
     surface = pygame.display.set_mode((800, 700))
@@ -491,15 +482,12 @@ def startMenu():
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 2:
         SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n"
-
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 1:
         SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n"
-
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 0:
         SCORE_GUIDE = "\nYOU ARE THE FIRST PLAYER! \n PLAY AND BECOME THE FIRST RANKER!"
-
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
 
     menu.mainloop(surface)
