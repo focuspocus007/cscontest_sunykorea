@@ -6,24 +6,32 @@ import re
 import pygame_menu
 
 """
-10 x 20 square grid
+22 x 10 square grid
 shapes: S, Z, I, O, J, L, T
-represented in order by 0 - 6
+represented in order by 0 - 6 in an array
 """
 
 pygame.font.init()
-user_name = ""
 # GLOBALS VARS
+
+user_name = ""
+
 s_width = 800
 s_height = 700
-play_width = 200  # meaning 300 // 10 = 30 width per block
-play_height = 440  # meaning 600 // 20 = 20 height per blo ck
+play_width = 200 
+play_height = 440 
+
 block_size = 20
+
+rows = 22
+columns = 10 
 
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
 
 fall_time = 0
+
+score = 0
 
 # SHAPE FORMATS
 
@@ -131,12 +139,9 @@ T = [['.....',
 shapes = [S, Z, I, O, J, L, T]
 shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (128, 0, 128), (255, 127, 0), (255, 0, 127)]
 # index 0 - 6 represent shape
-score = 0
+
 
 class Piece(object):
-    rows = 22  # y
-    columns = 10  # x
-
     def __init__(self, column, row, shape):
         self.x = column
         self.y = row
@@ -174,8 +179,7 @@ def convert_shape_format(shape):
 
 def valid_space(shape, grid):
 
-    accepted_positions = [[(j, i) for j in range(
-        10) if grid[i][j] == (0, 0, 0)] for i in range(22)]
+    accepted_positions = [[(j, i) for j in range(10) if grid[i][j] == (0, 0, 0)] for i in range(22)]
     accepted_positions = [j for sub in accepted_positions for j in sub]
     formatted = convert_shape_format(shape)
 
@@ -196,9 +200,7 @@ def check_lost(positions):
             mySound = pygame.mixer.Sound( "Game over sound effect HD.wav" )
             mySound.set_volume(0.7)
             mySound.play(0)
-            
-            # print("user:",user_name)
-            # Youngho:1204 (name:score format)
+
             with open("scoreboard.txt", 'a') as f:
                 f.writelines(str(user_name)+":"+str(score)+"\n")
             return True
@@ -207,31 +209,26 @@ def check_lost(positions):
 
 def get_shape():
     global shapes, shape_colors
-
     return Piece(5, 0, random.choice(shapes))
 
 
-def draw_text_middle(text, size, color, surface):
+def draw_text_middle(text, size, color, surface): #draw text in the middle of the screen
     font = pygame.font.SysFont('comicsans', size, bold=True)
     label = font.render(text, 1, color)
-
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width() / 2),
                          top_left_y + play_height/2 - label.get_height()/2))
 
 
-def draw_grid(surface, row, col):
+def draw_grid(surface, row, col): #draw overall grid
     sx = top_left_x
     sy = top_left_y
     for i in range(row):
-        pygame.draw.line(surface, (128, 128, 128), (sx, sy + i*block_size),
-                         (sx + play_width, sy + i * block_size))  # horizontal lines
+        pygame.draw.line(surface, (128, 128, 128), (sx, sy + i*block_size), (sx + play_width, sy + i * block_size))  #horizontal
         for j in range(col):
-            pygame.draw.line(surface, (128, 128, 128), (sx + j * block_size, sy),
-                             (sx + j * block_size, sy + play_height))  # vertical lines
+            pygame.draw.line(surface, (128, 128, 128), (sx + j * block_size, sy), (sx + j * block_size, sy + play_height)) #vertical
 
 
 def clear_rows(grid, locked):
-    # need to see if row is clear the shift every other row above down one
     global score
     inc = 0
     for i in range(len(grid)-1, -1, -1):
@@ -246,14 +243,12 @@ def clear_rows(grid, locked):
                 except:
                     continue
     if inc > 0:
-        
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
             x, y = key
             if y < ind:
                 newKey = (x, y + inc)
                 locked[newKey] = locked.pop(key)
         score += 1
-        # print(score)
 
 
 
@@ -309,6 +304,7 @@ def draw_window(surface):
 def main():
     global grid
     global fall_time
+    global score
 
     locked_positions = {}  # (x,y):(255,0,0)
     grid = create_grid(locked_positions)
@@ -389,9 +385,9 @@ def main():
                     while valid_space(current_piece, grid):
                         current_piece.y += 1
                     current_piece.y -= 1
-                    # print(convert_shape_format(current_piece))  # todo fix
 
                 if event.key == pygame.K_ESCAPE:
+                    score = 0
                     run = False
                     pygame.mixer.stop()
                     startMenu()
@@ -423,8 +419,9 @@ def main():
 
         # Check if user lost
         if check_lost(locked_positions):
+            score = 0
             run = False
-            time.sleep(0.5)
+            time.sleep(1.5)
             pygame.mixer.stop()
             startMenu()
             break
@@ -456,7 +453,6 @@ def getUserScore():
     while True:
         line = f.readline()
         if not line: break
-        # print(line)
         userScore.append(line)
     f.close()
 
@@ -464,40 +460,30 @@ def getUserScore():
     
     finalRank = []
     for each in userScore:
-        # print(each)
         rankScore = ""
         userName = ""
         for x in reversed(each):
             if x.isdigit():
-                # print(type(rankScore), type(x))
                 rankScore += str(x)
             else:
                 userName += str(x)
             #reverse the integers that were reversed because of the reversed for loop
         rankScore = str(rankScore[::-1])
-        # print("rankscore",rankScore)
 
         userName = userName[::-1]
-        # print("username",userName)
 
         finalRank.append((int(rankScore), userName.rstrip(":\n")))
         
         finalRank.sort(reverse=True, key=lambda tup: tup[0])
 
-        
-        # print(finalRank)
     return finalRank
 
 def startMenu():
-
     pygame.init()
-    
     surface = pygame.display.set_mode((800, 700))
-    menu = pygame_menu.Menu(700, 600, 'Team 2 TETRIS',
-                            theme=pygame_menu.themes.THEME_DARK)
+    menu = pygame_menu.Menu(700, 600, 'Team 2 TETRIS', theme=pygame_menu.themes.THEME_DARK)
     menu.add.text_input('Name :', default='', onchange=getUserID)
-    menu.add.selector(
-        'Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
+    menu.add.selector('Difficulty :', [('Hard', 1), ('Normal', 2), ('Easy', 3)], onchange=set_difficulty)
     menu.add.button('Play', main)
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
@@ -505,25 +491,21 @@ def startMenu():
 
     if len(ranking) >= 3:
         SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n3rd : {ranking[2][0], ranking[2][1]}\n"
-        # print("SCORE_GUIDE",SCORE_GUIDE)
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 2:
         SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n2nd : {ranking[1][0], ranking[1][1]}\n"
-        # print("SCORE_GUIDE",SCORE_GUIDE)
+
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 1:
         SCORE_GUIDE = f"\nGOD OF TETRIS [RANKING]\n SCORE,NAME\n1st : {ranking[0][0], ranking[0][1]}\n"
-        # print("SCORE_GUIDE",SCORE_GUIDE)
+
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
     if len(ranking) == 0:
         SCORE_GUIDE = "\nYOU ARE THE FIRST PLAYER! \n PLAY AND BECOME THE FIRST RANKER!"
-        # print("SCORE_GUIDE",SCORE_GUIDE)
+
         menu.add_label(SCORE_GUIDE, max_char=-1, font_size=20)
 
     menu.mainloop(surface)
+
 win = pygame.display.set_mode((s_width, s_height))
 startMenu()
-# 
-# pygame.display.set_caption('Tetris')
-
-# main_menu()  # start game
