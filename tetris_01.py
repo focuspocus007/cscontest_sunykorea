@@ -354,7 +354,7 @@ def main():
     next_piece = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
-    INCREMENT = 5
+    INCREMENT = 20
     start_time = time.time()
     fall_speed = 0.25
 
@@ -371,7 +371,7 @@ def main():
         if (end_time - start_time >= INCREMENT):
             start_time = end_time
             if (fall_speed != 0):
-                fall_speed = fall_speed - 0.01
+                fall_speed = fall_speed - 0.001
             else: 
                 fall_speed = 0
 
